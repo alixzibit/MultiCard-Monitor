@@ -1,0 +1,82 @@
+﻿<ui:FluentWindow
+        x:Class="MultiCard_Monitor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:tray="http://schemas.lepo.co/wpfui/2022/xaml/tray"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MultiCard_Monitor"
+        Title="MultiCard Monitor"
+        Height="550" 
+        Width="800"
+        ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+        ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+        ExtendsContentIntoTitleBar="True"
+        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+        WindowBackdropType="Auto"
+        WindowStyle="ThreeDBorderWindow"
+        WindowCornerPreference="Round"
+        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d">
+
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar
+     Title="MultiCard Monitor"
+     Grid.Row="0" Margin="0,-4,0,0"/>
+
+        <!-- MDB File Load Button -->
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,50,0,420"/>
+
+        <!-- TabControl to display different tables -->
+        <TabControl x:Name="TablesTabControl" Grid.Row="1" Margin="6,35,6,74">
+            <!-- Tab items will be dynamically added in code-behind -->
+        </TabControl>
+
+        <!-- Footer Buttons -->
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Left" Margin="550,438,0,0"/>
+        <ui:Button Appearance="Primary" Content="Load MDB File" Width="150" Click="OnLoadFileClicked" Grid.Row="1" VerticalAlignment="Top" Foreground="Black">
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF7FC88E"/>
+                    <GradientStop Color="#FF3F884D" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.Background>
+        </ui:Button>
+
+        <!-- Define a ContentDialog for the path configuration -->
+        <ui:Button Appearance="Info" Content="Set Activity Log Configuration" VerticalAlignment="Top" Click="OnSetConfigClicked" Margin="356,43,0,0" Grid.RowSpan="2"/>
+        <ui:Button Appearance="Primary" Content="Real-Time Monitoring" VerticalAlignment="Top" Click="OnRealTimeMonitoringClicked" Margin="171,43,0,0" Grid.RowSpan="2" Foreground="#FFA51313">
+            <ui:Button.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF8C9C2B"/>
+                    <GradientStop Color="#FFF3FFAB" Offset="1"/>
+                </LinearGradientBrush>
+            </ui:Button.Background>
+        </ui:Button>
+        <StackPanel Margin="5,418,5,4" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+            <ui:Button Appearance="Primary" x:Name="refresh" Content="Refresh" Click="OnRefreshClicked" IsEnabled="False" Height="32" Width="123" Foreground="Black">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FF7FC88E"/>
+                        <GradientStop Color="#FF3F884D" Offset="1"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </ui:Button>
+            <ui:Button Appearance="Primary" x:Name="Exportcsv" Content="Export to CSV" Click="OnExportClicked" IsEnabled="False" BorderBrush="#0FF30000" Height="32" Width="147" Margin="155,-31,0,0" Foreground="Black">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FF7FC88E"/>
+                        <GradientStop Color="#FF3F884D" Offset="1"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </ui:Button>
+        </StackPanel>
+    </Grid>
+</ui:FluentWindow>

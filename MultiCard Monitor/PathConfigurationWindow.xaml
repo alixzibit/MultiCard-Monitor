@@ -1,0 +1,55 @@
+﻿<ui:FluentWindow x:Class="MultiCard_Monitor.PathConfigurationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:tray="http://schemas.lepo.co/wpfui/2022/xaml/tray"
+        WindowStyle="SingleBorderWindow"
+        WindowStartupLocation="CenterScreen"
+        Title="Path Configuration" Height="188" Width="528" Background="#FF848484">
+    <Grid Margin="10">
+        <StackPanel>
+            <ui:TextBlock Text="Configure Paths" FontWeight="Bold" Margin="0,0,0,10"/>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                <ui:TextBlock Text="ActivityLog.mdb:" VerticalAlignment="Center" Width="120"/>
+                <ui:TextBox x:Name="ActivityLogPathTextBox" Width="300" />
+                <ui:Button Content="Browse..." Click="OnBrowseActivityLog">
+                    <ui:Button.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="Black"/>
+                            <GradientStop Color="#FF403737" Offset="1"/>
+                        </LinearGradientBrush>
+                    </ui:Button.Background>
+                </ui:Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <ui:TextBlock Text="Diagnostica.mdb:" VerticalAlignment="Center" Width="120"/>
+                <ui:TextBox x:Name="DiagnosticaPathTextBox" Width="300" />
+                <ui:Button Content="Browse..." Click="OnBrowseDiagnostica">
+                    <ui:Button.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="Black"/>
+                            <GradientStop Color="#FF403737" Offset="1"/>
+                        </LinearGradientBrush>
+                    </ui:Button.Background>
+                </ui:Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"/>
+        </StackPanel>
+        <ui:Button Appearance="Primary" Content="Save" Width="77" Click="OnSaveClicked" Margin="422,117,0,0" VerticalAlignment="Top" Foreground="Black">
+            <ui:Button.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF097B00"/>
+                    <GradientStop Color="#FF84D698" Offset="1"/>
+                </LinearGradientBrush>
+            </ui:Button.Background>
+        </ui:Button>
+        <ui:Button Appearance="Primary" Content="Exit" Width="77" Margin="333,118,0,0" VerticalAlignment="Top" Foreground="Black" Click="Button_Click">
+            <ui:Button.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFBB2C2C"/>
+                    <GradientStop Color="#FFE28F60" Offset="1"/>
+                </LinearGradientBrush>
+            </ui:Button.Background>
+        </ui:Button>
+    </Grid>
+</ui:FluentWindow>
