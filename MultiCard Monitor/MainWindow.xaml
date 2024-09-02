@@ -10,6 +10,7 @@
         Title="MultiCard Monitor"
         Height="550" 
         Width="800"
+<<<<<<< HEAD
         ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
         ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
         ExtendsContentIntoTitleBar="True"
@@ -22,6 +23,22 @@
 
 
     <Grid Margin="10">
+=======
+        ui:Design.Background="{DynamicResource ApplicationBackground}"
+        ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+        ExtendsContentIntoTitleBar="True"
+        WindowBackdropType="Acrylic" 
+        WindowStyle="None"
+        WindowCornerPreference="Round"
+        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d" Background="Black">
+
+    <!--ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"-->
+    <!--ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"-->
+    <!--Foreground="{DynamicResource TextFillColorPrimaryBrush}"-->
+
+<Grid Margin="10">
+>>>>>>> 4c70bb63e1493870c6494e197b6aea99bc3d7e67
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
@@ -29,19 +46,31 @@
 
         <ui:TitleBar
      Title="MultiCard Monitor"
+<<<<<<< HEAD
      Grid.Row="0" Margin="0,-4,0,0"/>
+=======
+     Grid.Row="0" Margin="0,-14,0,0"/>
+>>>>>>> 4c70bb63e1493870c6494e197b6aea99bc3d7e67
 
         <!-- MDB File Load Button -->
         <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,50,0,420"/>
 
         <!-- TabControl to display different tables -->
+<<<<<<< HEAD
         <TabControl x:Name="TablesTabControl" Grid.Row="1" Margin="6,35,6,74">
+=======
+        <TabControl x:Name="TablesTabControl" Grid.Row="1" Margin="6,47,6,62">
+>>>>>>> 4c70bb63e1493870c6494e197b6aea99bc3d7e67
             <!-- Tab items will be dynamically added in code-behind -->
         </TabControl>
 
         <!-- Footer Buttons -->
         <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Left" Margin="550,438,0,0"/>
+<<<<<<< HEAD
         <ui:Button Appearance="Primary" Content="Load MDB File" Width="150" Click="OnLoadFileClicked" Grid.Row="1" VerticalAlignment="Top" Foreground="Black">
+=======
+        <ui:Button Appearance="Primary" Content="Load MultiCard Log" Width="150" Click="OnLoadFileClicked" Grid.Row="1" VerticalAlignment="Top" Foreground="Black" Margin="0,9,0,0">
+>>>>>>> 4c70bb63e1493870c6494e197b6aea99bc3d7e67
             <Button.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FF7FC88E"/>
@@ -52,7 +81,11 @@
 
         <!-- Define a ContentDialog for the path configuration -->
         <ui:Button Appearance="Info" Content="Set Activity Log Configuration" VerticalAlignment="Top" Click="OnSetConfigClicked" Margin="356,43,0,0" Grid.RowSpan="2"/>
+<<<<<<< HEAD
         <ui:Button Appearance="Primary" Content="Real-Time Monitoring" VerticalAlignment="Top" Click="OnRealTimeMonitoringClicked" Margin="171,43,0,0" Grid.RowSpan="2" Foreground="#FFA51313">
+=======
+        <ui:Button Appearance="Primary" Content="Real-Time Monitoring" VerticalAlignment="Top" Click="OnRealTimeMonitoringClicked" Margin="171,43,0,0" Grid.RowSpan="2" Foreground="Black">
+>>>>>>> 4c70bb63e1493870c6494e197b6aea99bc3d7e67
             <ui:Button.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FF8C9C2B"/>
@@ -69,7 +102,11 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </ui:Button>
+<<<<<<< HEAD
             <ui:Button Appearance="Primary" x:Name="Exportcsv" Content="Export to CSV" Click="OnExportClicked" IsEnabled="False" BorderBrush="#0FF30000" Height="32" Width="147" Margin="155,-31,0,0" Foreground="Black">
+=======
+            <ui:Button Appearance="Primary" x:Name="Exportcsv" Content="Export to CSV" Click="OnExportClicked" IsEnabled="False" Height="32" Width="147" Margin="155,-31,0,0" Foreground="Black">
+>>>>>>> 4c70bb63e1493870c6494e197b6aea99bc3d7e67
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <GradientStop Color="#FF7FC88E"/>

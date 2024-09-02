@@ -73,7 +73,11 @@ namespace MultiCard_Monitor
 
             if (!_rtMonitoring.AreProcessesRunning())
             {
+<<<<<<< HEAD
                 MessageBox.Show("Ensure that both Multicard.exe and SmartCardPersonalization.exe are running and try again.", "Processes Not Running", MessageBoxButton.OK, MessageBoxImage.Warning);
+=======
+                MessageBox.Show("Ensure that both Multicard and Communicator applications are running and try again.", "Processes Not Running", MessageBoxButton.OK, MessageBoxImage.Warning);
+>>>>>>> 4c70bb63e1493870c6494e197b6aea99bc3d7e67
                 return;
             }
 
@@ -93,8 +97,16 @@ namespace MultiCard_Monitor
         private void OnLoadFileClicked(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
+<<<<<<< HEAD
             {
                 Filter = "MDB files (*.mdb)|*.mdb|All files (*.*)|*.*"
+=======
+
+            {
+                //filter for "Multicard MDB files" with Activity.mdb and Diagnostica.mdb only as options
+                Filter =  "Multicard MDB files|ActivityLog.mdb;Diagnostica.mdb|All files (*.*)|*.*" 
+                //Filter = "MDB files (*.mdb)|*.mdb|All files (*.*)|*.*"
+>>>>>>> 4c70bb63e1493870c6494e197b6aea99bc3d7e67
             };
 
             if (openFileDialog.ShowDialog() == true)
@@ -181,7 +193,11 @@ namespace MultiCard_Monitor
         {
             if (string.IsNullOrEmpty(_connectionString))
             {
+<<<<<<< HEAD
                 MessageBox.Show("No MDB file loaded. Please load an MDB file first.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+=======
+                MessageBox.Show("No Multicard MDB file loaded. Please load an Multicard MDB file first.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+>>>>>>> 4c70bb63e1493870c6494e197b6aea99bc3d7e67
                 return;
             }
 
@@ -293,6 +309,11 @@ namespace MultiCard_Monitor
 
                 // Add the TabItem to the TabControl
                 TablesTabControl.Items.Add(tabItem);
+<<<<<<< HEAD
+=======
+                //ensure that the translated table is selected
+                TablesTabControl.SelectedItem = tabItem;
+>>>>>>> 4c70bb63e1493870c6494e197b6aea99bc3d7e67
             }
             catch (Exception ex)
             {
