@@ -5,21 +5,26 @@ using System.Threading.Tasks;
 using System.Data;
 using System.Data.OleDb;
 using System.Xml.Linq;
+using System.Collections.Generic;
 
 namespace MultiCard_Monitor
 {
     public class RTMonitoring
     {
+        private bool _isMonitoring;
         private string _activityLogPath;
         private string _diagnosticaPath;
+        private string _communicatorLogPath;
         private DateTime _lastTimestamp;
         private const string ProcessName1 = "Multicard";
         private const string ProcessName2 = "SmartCardPersonalization";
 
-        public RTMonitoring(string activityLogPath, string diagnosticaPath)
+        public RTMonitoring(string activityLogPath, string diagnosticaPath , string communicatorLogPath)
         {
             _activityLogPath = activityLogPath;
             _diagnosticaPath = diagnosticaPath;
+            _communicatorLogPath = communicatorLogPath;
+            _isMonitoring = true;
         }
 
         public bool AreProcessesRunning()
@@ -39,37 +44,58 @@ namespace MultiCard_Monitor
 
         public async Task MonitorEvents(Action<string> onNewEvent)
         {
-            while (true)
+            while (_isMonitoring)
             {
-                if (!File.Exists(_activityLogPath)) throw new FileNotFoundException("ActivityLog.mdb not found.");
-                using (OleDbConnection connection = new OleDbConnection($"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={_activityLogPath};"))
+                DateTime loopStartTimestamp = _lastTimestamp;
+
+                // Check and monitor MDB files
+                if (File.Exists(_activityLogPath))
                 {
-                    connection.Open();
+                    using (OleDbConnection activityLogConnection = new OleDbConnection($"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={_activityLogPath};"))
+                    {
+                        activityLogConnection.Open();
 
-                    // Monitor Admin table
-                    await MonitorTable(connection, "Admin", onNewEvent);
-
-                    // Monitor UserOperations table
-                    await MonitorTable(connection, "UserOperations", onNewEvent);
-
-                    // Monitor CardProduction table
-                    await MonitorTable(connection, "CardProduction", onNewEvent);
+                        await MonitorTable(activityLogConnection, "Admin", onNewEvent);
+                        await MonitorTable(activityLogConnection, "UserOperations", onNewEvent);
+                        await MonitorTable(activityLogConnection, "CardProduction", onNewEvent);
+                    }
                 }
 
-                // Update last timestamp after processing events
+                if (File.Exists(_diagnosticaPath))
+                {
+                    using (OleDbConnection diagnosticaConnection = new OleDbConnection($"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={_diagnosticaPath};"))
+                    {
+                        diagnosticaConnection.Open();
+                        await MonitorStatiAllarmiTable(diagnosticaConnection, onNewEvent);
+                    }
+                }
+
+                // Monitor Communicator log file
+                if (File.Exists(_communicatorLogPath))
+                {
+                    await MonitorCommunicatorLog(onNewEvent);
+                }
+
+                // Update last timestamp after processing all events
                 _lastTimestamp = DateTime.Now;
 
                 // Wait for a few seconds before the next check
-                await Task.Delay(5000);
+                await Task.Delay(1000);
             }
         }
 
+
         //private async Task MonitorTable(OleDbConnection connection, string tableName, Action<string> onNewEvent)
         //{
-        //    string query = $"SELECT * FROM {tableName} WHERE DateTime > @timestamp";
+        //    Format the DateTime to match the expected format in Access(without leading zeros)
+        //    string formattedTimestamp = _lastTimestamp.ToString("M/d/yyyy h:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture);
+
+        //    string query = $"SELECT * FROM {tableName} WHERE DateTime > ?";
         //    using (OleDbCommand command = new OleDbCommand(query, connection))
         //    {
-        //        command.Parameters.AddWithValue("@timestamp", _lastTimestamp);
+        //        Use a parameterized query to avoid SQL injection and ensure proper data type handling
+        //        command.Parameters.AddWithValue("?", formattedTimestamp);
+
         //        using (OleDbDataReader reader = command.ExecuteReader())
         //        {
         //            while (await reader.ReadAsync())
@@ -80,6 +106,7 @@ namespace MultiCard_Monitor
         //        }
         //    }
         //}
+
         private async Task MonitorTable(OleDbConnection connection, string tableName, Action<string> onNewEvent)
         {
             // Format the DateTime to match the expected format in Access
@@ -103,6 +130,172 @@ namespace MultiCard_Monitor
             }
         }
 
+
+
+
+        private async Task MonitorStatiAllarmiTable(OleDbConnection connection, Action<string> onNewEvent)
+        {
+            try
+            {
+                string formattedTimestamp = _lastTimestamp.ToString("MM/dd/yyyy hh:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture);
+                string query = "SELECT * FROM StatiAllarmi WHERE [DATA ORA] > ?";
+
+                using (OleDbCommand command = new OleDbCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("?", formattedTimestamp);
+
+                    using (OleDbDataReader reader = command.ExecuteReader())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            string formattedEvent = FormatStatiAllarmiEvent(reader);
+                            onNewEvent?.Invoke(formattedEvent);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                onNewEvent?.Invoke($"Error loading 'StatiAllarmi' table: {ex.Message}");
+            }
+        }
+
+
+        private DateTime ParseCommunicatorLogTimestamp(string timestamp)
+        {
+            DateTime parsedTimestamp;
+
+            // Check if the timestamp is in the format "YYYY-MM-DD HH:MM:SS"
+            if (DateTime.TryParseExact(timestamp, "yyyy-MM-dd HH:mm:ss", null, System.Globalization.DateTimeStyles.None, out parsedTimestamp))
+            {
+                return parsedTimestamp;
+            }
+
+            // Check if the timestamp is in the Julian format "DDMMYYYY HHMMSS:FFF"
+            if (timestamp.Length > 17 && timestamp[8] == ' ')
+            {
+                // Extract the main part and ignore the fractional seconds
+                string julianDate = timestamp.Substring(0, 17);
+                parsedTimestamp = ConvertJulianToDateTime(julianDate);
+            }
+            else
+            {
+                // Handle potential errors or unexpected formats
+                throw new FormatException("Unrecognized timestamp format: " + timestamp);
+            }
+
+            return parsedTimestamp;
+        }
+
+        private DateTime ConvertJulianToDateTime(string julianDate)
+        {
+            // Julian date in format: DDMMYYYY HHMMSS:FFF
+            string datePart = julianDate.Substring(0, 8);  // "03092024"
+            string timePart = julianDate.Substring(9, 6);  // "125806"
+
+            // Parse the date and time, ignoring the fractional seconds
+            DateTime dateTime = DateTime.ParseExact(datePart, "ddMMyyyy", null);
+            TimeSpan time = TimeSpan.ParseExact(timePart, "hhmmss", null);
+            dateTime = dateTime.Add(time);
+
+            return dateTime;
+        }
+
+        //private async Task MonitorCommunicatorLog(Action<string> onNewEvent)
+        //{
+        //    try
+        //    {
+        //        using (FileStream fileStream = new FileStream(_communicatorLogPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+        //        using (StreamReader reader = new StreamReader(fileStream))
+        //        {
+        //            string line;
+        //            while ((line = await reader.ReadLineAsync()) != null)
+        //            {
+        //                // Extract and convert the Julian timestamp
+        //                string julianDate = line.Substring(0, 17); // Assuming the timestamp is always in the first 17 characters
+        //                DateTime logTimestamp = ConvertJulianToDateTime(julianDate);
+
+        //                // Compare with the last timestamp
+        //                if (logTimestamp > _lastTimestamp)
+        //                {
+        //                    // Only process lines that contain "****" or "===="
+        //                    if (line.Contains("****") || line.Contains("===="))
+        //                    {
+        //                        onNewEvent?.Invoke(line);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        onNewEvent?.Invoke($"Error reading communicator log file: {ex.Message}");
+        //    }
+        //}
+        private async Task MonitorCommunicatorLog(Action<string> onNewEvent)
+        {
+            try
+            {
+                using (FileStream fileStream = new FileStream(_communicatorLogPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (StreamReader reader = new StreamReader(fileStream))
+                {
+                    string line;
+                    while ((line = await reader.ReadLineAsync()) != null)
+                    {
+                        // Extract the timestamp from the line
+                        string timestamp = ExtractTimestampFromLogLine(line);
+
+                        if (!string.IsNullOrEmpty(timestamp))
+                        {
+                            DateTime logTimestamp = ParseCommunicatorLogTimestamp(timestamp);
+
+                            // Compare with the last timestamp
+                            if (logTimestamp > _lastTimestamp)
+                            {
+                                // Only process lines that contain "****" or "===="
+                                if (line.Contains("****") || line.Contains("===="))
+                                {
+                                    onNewEvent?.Invoke(line);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                onNewEvent?.Invoke($"Error reading communicator log file: {ex.Message}");
+            }
+        }
+
+        private string ExtractTimestampFromLogLine(string line)
+        {
+            // Assuming the timestamp is always at the start of the line
+            if (line.Length >= 17)
+            {
+                return line.Substring(0, 19); // Extract the first 19 characters for both formats
+            }
+
+            return string.Empty;
+        }
+
+
+
+
+        private List<string> ParseCommunicatorLog(string[] logLines)
+        {
+            var parsedLines = new List<string>();
+
+            foreach (var line in logLines)
+            {
+                if (line.Contains("****") || line.Contains("===="))
+                {
+                    parsedLines.Add(line);
+                }
+            }
+
+            return parsedLines;
+        }
 
 
 
@@ -167,6 +360,28 @@ namespace MultiCard_Monitor
 
             return formattedEvent;
         }
+
+        private string FormatStatiAllarmiEvent(OleDbDataReader reader)
+        {
+            try
+            {
+                // Check if each column exists and is not null before accessing it
+                string dateTime = reader.IsDBNull(reader.GetOrdinal("DATA ORA")) ? "Unknown" : reader["DATA ORA"].ToString();
+                string typeDevice = reader.IsDBNull(reader.GetOrdinal("TIPO APPARATO")) ? "Unknown" : reader["TIPO APPARATO"].ToString();
+                string operatingStatus = reader.IsDBNull(reader.GetOrdinal("STATO OPERATIVO")) ? "Unknown" : reader["STATO OPERATIVO"].ToString();
+                string diagnosticStatus = reader.IsDBNull(reader.GetOrdinal("STATO DIAGNOSTICO")) ? "Unknown" : reader["STATO DIAGNOSTICO"].ToString();
+                string operatingMode = reader.IsDBNull(reader.GetOrdinal("MODALITA OPERATIVA")) ? "Unknown" : reader["MODALITA OPERATIVA"].ToString();
+                string alarm = reader.IsDBNull(reader.GetOrdinal("ALLARME")) ? "Unknown" : reader["ALLARME"].ToString();
+                string alarmDescription = reader.IsDBNull(reader.GetOrdinal("DESCRIZIONE ALLARME")) ? "Unknown" : reader["DESCRIZIONE ALLARME"].ToString();
+
+                return $"{dateTime} [StatiAllarmi] Type Device: {typeDevice}, Operating Status: {operatingStatus}, Diagnostic Status: {diagnosticStatus}, Operating Mode: {operatingMode}, Alarm: {alarm}, Alarm Description: {alarmDescription}";
+            }
+            catch (Exception ex)
+            {
+                return $"Error formatting StatiAllarmi event: {ex.Message}";
+            }
+        }
+
 
         private string MaskCardNumber(string cardNumber)
         {

@@ -11,6 +11,7 @@ namespace MultiCard_Monitor
 
         public string ActivityLogPath { get; private set; }
         public string DiagnosticaPath { get; private set; }
+        public string CommunicatorLogPath { get; private set; }
 
         public PathConfigurationWindow()
         {
@@ -44,24 +45,40 @@ namespace MultiCard_Monitor
             }
         }
 
+        private void OnBrowseCommunicatorLog(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Communicator Log file (*.*)|*.*"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                CommunicatorLogPathTextBox.Text = openFileDialog.FileName;
+            }
+        }
+
         private void OnSaveClicked(object sender, RoutedEventArgs e)
         {
             ActivityLogPath = ActivityLogPathTextBox.Text;
             DiagnosticaPath = DiagnosticaPathTextBox.Text;
+            CommunicatorLogPath = CommunicatorLogPathTextBox.Text;
 
             // Save the paths to an XML file
-            SaveConfiguration(ActivityLogPath, DiagnosticaPath);
+            SaveConfiguration(ActivityLogPath, DiagnosticaPath, CommunicatorLogPath);
 
             this.DialogResult = true;
             this.Close();
         }
 
-        private void SaveConfiguration(string activityLogPath, string diagnosticaPath)
+        
+         private void SaveConfiguration(string activityLogPath, string diagnosticaPath, string communicatorLogPath)
         {
             var configXml = new XElement("Configuration",
                                 new XElement("Paths",
                                     new XElement("ActivityLogPath", activityLogPath),
-                                    new XElement("DiagnosticaPath", diagnosticaPath)
+                                    new XElement("DiagnosticaPath", diagnosticaPath),
+                                    new XElement("CommunicatorLogPath", communicatorLogPath)
                                 ));
 
             configXml.Save(ConfigFilePath);
@@ -74,6 +91,7 @@ namespace MultiCard_Monitor
                 XElement configXml = XElement.Load(ConfigFilePath);
                 ActivityLogPathTextBox.Text = configXml.Element("Paths").Element("ActivityLogPath")?.Value;
                 DiagnosticaPathTextBox.Text = configXml.Element("Paths").Element("DiagnosticaPath")?.Value;
+                CommunicatorLogPathTextBox.Text = configXml.Element("Paths").Element("CommunicatorLogPath")?.Value;
             }
         }
 

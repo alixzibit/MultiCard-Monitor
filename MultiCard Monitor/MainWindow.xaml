@@ -10,67 +10,55 @@
         Title="MultiCard Monitor"
         Height="550" 
         Width="800"
-<<<<<<< HEAD
-        ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
-        ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-        ExtendsContentIntoTitleBar="True"
-        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-        WindowBackdropType="Auto"
-        WindowStyle="ThreeDBorderWindow"
-        WindowCornerPreference="Round"
-        WindowStartupLocation="CenterScreen"
-        mc:Ignorable="d">
-
-
-    <Grid Margin="10">
-=======
         ui:Design.Background="{DynamicResource ApplicationBackground}"
         ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
         ExtendsContentIntoTitleBar="True"
-        WindowBackdropType="Acrylic" 
+        WindowBackdropType="Tabbed" 
         WindowStyle="None"
         WindowCornerPreference="Round"
         WindowStartupLocation="CenterScreen"
-        mc:Ignorable="d" Background="Black">
+        mc:Ignorable="d">
+    <ui:FluentWindow.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FF163E46"/>
+            <GradientStop Color="#FF163E46" Offset="1"/>
+            <GradientStop Color="#FFADD0D6" Offset="0.233"/>
+            <GradientStop Color="#FFADD0D6" Offset="0.834"/>
+        </LinearGradientBrush>
+    </ui:FluentWindow.Background>
 
     <!--ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"-->
     <!--ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"-->
     <!--Foreground="{DynamicResource TextFillColorPrimaryBrush}"-->
 
-<Grid Margin="10">
->>>>>>> 4c70bb63e1493870c6494e197b6aea99bc3d7e67
+    <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
         <ui:TitleBar
-     Title="MultiCard Monitor"
-<<<<<<< HEAD
-     Grid.Row="0" Margin="0,-4,0,0"/>
-=======
-     Grid.Row="0" Margin="0,-14,0,0"/>
->>>>>>> 4c70bb63e1493870c6494e197b6aea99bc3d7e67
+     Title="MultiCard Monitor "
+     Grid.Row="0" Margin="-10,-14,-11,0" FontSize="14" FontFamily="Segoe UI Semibold" Foreground="White" Height="34">
+            <ui:TitleBar.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" SpreadMethod="Reflect">
+                    <GradientStop Color="#FF375E65" Offset="1"/>
+                    <GradientStop Color="#FF4199A0"/>
+                </LinearGradientBrush>
+            </ui:TitleBar.Background>
+        </ui:TitleBar>
 
         <!-- MDB File Load Button -->
         <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,50,0,420"/>
 
         <!-- TabControl to display different tables -->
-<<<<<<< HEAD
-        <TabControl x:Name="TablesTabControl" Grid.Row="1" Margin="6,35,6,74">
-=======
-        <TabControl x:Name="TablesTabControl" Grid.Row="1" Margin="6,47,6,62">
->>>>>>> 4c70bb63e1493870c6494e197b6aea99bc3d7e67
+        <TabControl x:Name="TablesTabControl" Grid.Row="1" Margin="6,67,6,42">
             <!-- Tab items will be dynamically added in code-behind -->
         </TabControl>
 
         <!-- Footer Buttons -->
         <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Left" Margin="550,438,0,0"/>
-<<<<<<< HEAD
-        <ui:Button Appearance="Primary" Content="Load MDB File" Width="150" Click="OnLoadFileClicked" Grid.Row="1" VerticalAlignment="Top" Foreground="Black">
-=======
-        <ui:Button Appearance="Primary" Content="Load MultiCard Log" Width="150" Click="OnLoadFileClicked" Grid.Row="1" VerticalAlignment="Top" Foreground="Black" Margin="0,9,0,0">
->>>>>>> 4c70bb63e1493870c6494e197b6aea99bc3d7e67
+        <ui:Button Appearance="Primary" Content="Load MultiCard Log" Width="150" Click="OnLoadFileClicked" Grid.Row="1" VerticalAlignment="Top" Foreground="White" Margin="0,23,0,0">
             <Button.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FF7FC88E"/>
@@ -81,11 +69,7 @@
 
         <!-- Define a ContentDialog for the path configuration -->
         <ui:Button Appearance="Info" Content="Set Activity Log Configuration" VerticalAlignment="Top" Click="OnSetConfigClicked" Margin="356,43,0,0" Grid.RowSpan="2"/>
-<<<<<<< HEAD
-        <ui:Button Appearance="Primary" Content="Real-Time Monitoring" VerticalAlignment="Top" Click="OnRealTimeMonitoringClicked" Margin="171,43,0,0" Grid.RowSpan="2" Foreground="#FFA51313">
-=======
-        <ui:Button Appearance="Primary" Content="Real-Time Monitoring" VerticalAlignment="Top" Click="OnRealTimeMonitoringClicked" Margin="171,43,0,0" Grid.RowSpan="2" Foreground="Black">
->>>>>>> 4c70bb63e1493870c6494e197b6aea99bc3d7e67
+        <ui:Button Appearance="Primary" Content="Real-Time Monitoring" VerticalAlignment="Top" Click="OnRealTimeMonitoringClicked" Margin="171,43,0,0" Grid.RowSpan="2" Foreground="#FFE81D1D">
             <ui:Button.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FF8C9C2B"/>
@@ -94,7 +78,7 @@
             </ui:Button.Background>
         </ui:Button>
         <StackPanel Margin="5,418,5,4" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left">
-            <ui:Button Appearance="Primary" x:Name="refresh" Content="Refresh" Click="OnRefreshClicked" IsEnabled="False" Height="32" Width="123" Foreground="Black">
+            <ui:Button Appearance="Primary" x:Name="refresh" Content="Refresh" Click="OnRefreshClicked" IsEnabled="False" Height="32" Width="123" Foreground="White">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <GradientStop Color="#FF7FC88E"/>
@@ -102,11 +86,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </ui:Button>
-<<<<<<< HEAD
-            <ui:Button Appearance="Primary" x:Name="Exportcsv" Content="Export to CSV" Click="OnExportClicked" IsEnabled="False" BorderBrush="#0FF30000" Height="32" Width="147" Margin="155,-31,0,0" Foreground="Black">
-=======
-            <ui:Button Appearance="Primary" x:Name="Exportcsv" Content="Export to CSV" Click="OnExportClicked" IsEnabled="False" Height="32" Width="147" Margin="155,-31,0,0" Foreground="Black">
->>>>>>> 4c70bb63e1493870c6494e197b6aea99bc3d7e67
+            <ui:Button Appearance="Primary" x:Name="Exportcsv" Content="Export to CSV" Click="OnExportClicked" IsEnabled="False" Height="32" Width="147" Margin="155,-31,0,0" Foreground="White">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <GradientStop Color="#FF7FC88E"/>

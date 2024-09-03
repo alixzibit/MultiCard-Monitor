@@ -1,13 +1,31 @@
-﻿        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ui:FluentWindow
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:tray="http://schemas.lepo.co/wpfui/2022/xaml/tray"
+        xmlns:av="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="av" x:Class="MultiCard_Monitor.PathConfigurationWindow"
+        WindowStyle="None"
+        ExtendsContentIntoTitleBar="True"
+        WindowBackdropType="Tabbed" 
         WindowStartupLocation="CenterScreen"
+        Title="Path Configuration" Height="220" Width="525">
+    <ui:FluentWindow.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FF163E46"/>
+            <GradientStop Color="#FF163E46" Offset="1"/>
+            <GradientStop Color="#FF6D9EA7" Offset="0.233"/>
+            <GradientStop Color="#FF6D9EA7" Offset="0.834"/>
+        </LinearGradientBrush>
+    </ui:FluentWindow.Background>
+    <Grid Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center">
         <StackPanel>
+            <ui:TextBlock Text="Configure Paths" FontWeight="Bold" Margin="0,0,0,10" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+
+            <!-- ActivityLog.mdb Path -->
             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                 <ui:TextBlock Text="ActivityLog.mdb:" VerticalAlignment="Center" Width="120"/>
                 <ui:TextBox x:Name="ActivityLogPathTextBox" Width="300" />
-                <ui:Button Content="Browse..." Click="OnBrowseActivityLog">
+                <ui:Button Appearance="Info" Content="Browse..." Click="OnBrowseActivityLog" Foreground="White">
                     <ui:Button.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="Black"/>
@@ -16,10 +34,12 @@
                     </ui:Button.Background>
                 </ui:Button>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
+
+            <!-- Diagnostica.mdb Path -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                 <ui:TextBlock Text="Diagnostica.mdb:" VerticalAlignment="Center" Width="120"/>
                 <ui:TextBox x:Name="DiagnosticaPathTextBox" Width="300" />
-                <ui:Button Content="Browse..." Click="OnBrowseDiagnostica">
+                <ui:Button Appearance="Info" Content="Browse..." Click="OnBrowseDiagnostica" Foreground="#E4FFFFFF">
                     <ui:Button.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="Black"/>
@@ -28,9 +48,25 @@
                     </ui:Button.Background>
                 </ui:Button>
             </StackPanel>
-            <StackPanel Orientation="Horizontal"/>
+
+            <!-- Communicator Log Path -->
+            <StackPanel Orientation="Horizontal">
+                <ui:TextBlock Text="Communicator Log:" VerticalAlignment="Center" Width="120"/>
+                <ui:TextBox x:Name="CommunicatorLogPathTextBox" Width="300" />
+                <ui:Button Appearance="Info" Content="Browse..." Click="OnBrowseCommunicatorLog" Foreground="#E4FFFFFF">
+                    <ui:Button.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="Black"/>
+                            <GradientStop Color="#FF403737" Offset="1"/>
+                        </LinearGradientBrush>
+                    </ui:Button.Background>
+                </ui:Button>
+            </StackPanel>
+
         </StackPanel>
-        <ui:Button Appearance="Primary" Content="Save" Width="77" Click="OnSaveClicked" Margin="422,117,0,0" VerticalAlignment="Top" Foreground="Black">
+
+        <!-- Save and Exit Buttons -->
+        <ui:Button Appearance="Primary" Content="Save" Width="77" Click="OnSaveClicked" Margin="422,167,0,0" VerticalAlignment="Top" Foreground="White">
             <ui:Button.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FF097B00"/>
@@ -38,7 +74,8 @@
                 </LinearGradientBrush>
             </ui:Button.Background>
         </ui:Button>
-        <ui:Button Appearance="Primary" Content="Exit" Width="77" Margin="333,118,0,0" VerticalAlignment="Top" Foreground="Black" Click="Button_Click">
+
+        <ui:Button Appearance="Primary" Content="Exit" Width="77" Margin="333,168,0,0" VerticalAlignment="Top" Foreground="White" Click="Button_Click">
             <ui:Button.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FFBB2C2C"/>
@@ -46,5 +83,6 @@
                 </LinearGradientBrush>
             </ui:Button.Background>
         </ui:Button>
+
     </Grid>
 </ui:FluentWindow>
